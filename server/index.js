@@ -35,6 +35,20 @@ app.post("/addpassword", (req, res) => {
   );
 });
 
+app.get("/getpasswords", (req, res) => {
+  db.query("Select * from passwords", (err, result) => {
+    if (err) {
+      console.log("Error fetching passwords:", err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
+app.post("/decryptpassword", (req, res) => {
+  res.send(decrypt(req.body));
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
