@@ -18,9 +18,11 @@ const db = mysql.createConnection({
 
 app.post("/addpassword", (req, res) => {
   const { passwords, title } = req.body;
+  const encryptedPassword = encrypt(passwords);
+
   db.query(
-    "Insert into passwords (password,website) values (?, ?)",
-    [passwords, title],
+    "Insert into passwords (password,website,iv) values (?, ?, ?)",
+    [encryptedPassword.password, title, encryptedPassword.iv],
     (err, result) => {
       if (err) {
         console.error("Error inserting password:", err);

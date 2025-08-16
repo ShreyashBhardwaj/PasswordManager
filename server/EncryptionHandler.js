@@ -4,10 +4,10 @@ const secret = "pppppppppppppppppppppppppppppppp";
 const encrypt = (password) => {
   const iv = Buffer.from(crypto.randomBytes(16));
   const cipher = crypto.createCipheriv("aes-256-ctr", Buffer.from(secret), iv);
-  const encryptedPassword = Buffer.concat(
+  const encryptedPassword = Buffer.concat([
     cipher.update(password),
-    cipher.final()
-  );
+    cipher.final(),
+  ]);
 
   return {
     iv: iv.toString("hex"),
@@ -22,10 +22,10 @@ const decrypt = (encryption) => {
     Buffer.from(encryption.iv, "hex")
   );
 
-  const decryptedPassword = Buffer.concat(
+  const decryptedPassword = Buffer.concat([
     decipher.update(Buffer.from(encryption.password, "hex")),
-    decipher.final()
-  );
+    decipher.final(),
+  ]);
 
   return decryptedPassword.toString();
 };
