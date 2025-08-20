@@ -2,12 +2,18 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import PasswordPromptModal from "./PasswordPromptModal";
 
 function App() {
   const [passwords, setPasswords] = useState("");
   const [title, setTitle] = useState("");
   const [passwordList, setPasswordList] = useState([]);
-  const [decryptedId, setDecryptedId] = useState(null); // New state to track the decrypted password's ID
+  const [decryptedId, setDecryptedId] = useState(null);
+
+  // 🔑 New states for authentication modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [lastAuthTime, setLastAuthTime] = useState(null);
+  const [pendingEncryption, setPendingEncryption] = useState(null);
 
   useEffect(() => {
     Axios.get("http://localhost:3001/getpasswords")
@@ -35,16 +41,23 @@ function App() {
   };
 
   const togglePassword = (encryption) => {
+    const now = Date.now();
+
+    // Check authentication expiry (30 seconds)
+    if (!lastAuthTime || now - lastAuthTime > 30000) {
+      setPendingEncryption(encryption);
+      setIsModalOpen(true);
+      return;
+    }
+
+    // If already authenticated, proceed to decrypt
     if (decryptedId === encryption.id) {
-      // If the same password is clicked, hide it
       setDecryptedId(null);
     } else {
-      // Otherwise, decrypt the password and show it
       Axios.post("http://localhost:3001/decryptpassword", {
         password: encryption.password,
         iv: encryption.iv,
       }).then((response) => {
-        // Find the index of the password to update
         const passwordIndex = passwordList.findIndex(
           (val) => val.id === encryption.id
         );
@@ -56,9 +69,20 @@ function App() {
             decrypted: response.data,
           };
           setPasswordList(newPasswordList);
-          setDecryptedId(encryption.id); // Set the ID of the currently decrypted password
+          setDecryptedId(encryption.id);
         }
       });
+    }
+  };
+
+  // Called when modal password entry is correct
+  const handleAuthSuccess = () => {
+    setLastAuthTime(Date.now());
+    setIsModalOpen(false);
+
+    if (pendingEncryption) {
+      togglePassword(pendingEncryption);
+      setPendingEncryption(null);
     }
   };
 
@@ -88,7 +112,7 @@ function App() {
           return (
             <div
               className="password"
-              key={val.id} // Added key for better React performance
+              key={val.id}
               onClick={() => {
                 togglePassword({
                   password: val.password,
@@ -102,6 +126,13 @@ function App() {
           );
         })}
       </div>
+
+      {/* 🔑 Modal */}
+      <PasswordPromptModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+      />
     </div>
   );
 }

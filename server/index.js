@@ -52,3 +52,29 @@ app.post("/decryptpassword", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+const bodyParser = require("body-parser");
+// const bcrypt = require("bcrypt"); // if you want hashed password storage
+require("dotenv").config();
+
+app.use(bodyParser.json());
+
+// Example: store master password in .env
+// MASTER_PASSWORD=supersecret
+
+app.post("/verify-master-password", async (req, res) => {
+  const { password } = req.body;
+
+  // If plain-text (not recommended), just compare directly
+  if (password === process.env.MASTER_PASSWORD) {
+    return res.json({ success: true });
+  }
+
+  // If hashed (recommended)
+  // const match = await bcrypt.compare(password, process.env.HASHED_MASTER_PASSWORD);
+  // if (match) return res.json({ success: true });
+
+  return res.status(401).json({ success: false, message: "Invalid password" });
+});
+
+module.exports = app;
