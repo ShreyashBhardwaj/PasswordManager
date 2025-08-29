@@ -21,7 +21,7 @@ export default function PasswordPromptModal({ isOpen, onClose, onSuccess }) {
       );
 
       if (response.ok) {
-        onSuccess(); // notify parent
+        onSuccess();
         setInput("");
         onClose();
       } else {
@@ -33,30 +33,27 @@ export default function PasswordPromptModal({ isOpen, onClose, onSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-xl shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">Enter Master Password</h2>
+    <div className="modal-overlay">
+      <div className="modal-box">
+        <h2 className="modal-title">Enter Master Password</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="password"
-            className="w-full border p-2 rounded mb-3"
+            className="modal-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Master password"
           />
-          {error && <p className="text-red-600 mb-2">{error}</p>}
-          <div className="flex justify-end gap-2">
+          {error && <p className="modal-error">{error}</p>}
+          <div className="modal-actions">
             <button
               type="button"
-              className="px-4 py-2 bg-gray-400 text-white rounded"
+              className="modal-btn cancel"
               onClick={onClose}
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded"
-            >
+            <button type="submit" className="modal-btn confirm">
               Submit
             </button>
           </div>
