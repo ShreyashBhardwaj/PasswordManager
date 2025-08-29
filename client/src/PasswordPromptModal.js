@@ -35,7 +35,7 @@ export default function PasswordPromptModal({ isOpen, onClose, onSuccess }) {
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <h2 className="modal-title">Enter Master Password</h2>
+        <h2 className="modal-title">🔒 Enter Master Password</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="password"

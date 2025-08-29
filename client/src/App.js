@@ -10,7 +10,7 @@ function App() {
   const [passwordList, setPasswordList] = useState([]);
   const [decryptedId, setDecryptedId] = useState(null);
 
-  // 🔑 New states for authentication modal
+  // 🔑 States for authentication modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastAuthTime, setLastAuthTime] = useState(null);
   const [pendingEncryption, setPendingEncryption] = useState(null);
@@ -43,14 +43,14 @@ function App() {
   const togglePassword = (encryption) => {
     const now = Date.now();
 
-    // Check authentication expiry (30 seconds)
+    // Require re-authentication after 30s
     if (!lastAuthTime || now - lastAuthTime > 30000) {
       setPendingEncryption(encryption);
       setIsModalOpen(true);
       return;
     }
 
-    // If already authenticated, proceed to decrypt
+    // Toggle password visibility
     if (decryptedId === encryption.id) {
       setDecryptedId(null);
     } else {
@@ -88,6 +88,9 @@ function App() {
 
   return (
     <div className="App">
+      <h1 className="AppTitle">🔐 Password Manager</h1>
+
+      {/* Add Password Card */}
       <div className="AddingPassword">
         <input
           type="text"
@@ -106,12 +109,13 @@ function App() {
         <button onClick={addPassword}>Add Password</button>
       </div>
 
+      {/* Stored Passwords */}
       <div className="PasswordList">
         <h1>Stored Passwords</h1>
-        {passwordList.map((val) => {
-          return (
+        <div className="PasswordGrid">
+          {passwordList.map((val) => (
             <div
-              className="password"
+              className="password-card"
               key={val.id}
               onClick={() => {
                 togglePassword({
@@ -121,10 +125,16 @@ function App() {
                 });
               }}
             >
-              <h3>{decryptedId === val.id ? val.decrypted : val.website}</h3>
+              <div className="password-card-content">
+                <span className="password-icon">🔑</span>
+                <h3>{decryptedId === val.id ? val.decrypted : val.website}</h3>
+                <span className="password-action">
+                  {decryptedId === val.id ? "🙈 Hide" : "👁 View"}
+                </span>
+              </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
       {/* 🔑 Modal */}
