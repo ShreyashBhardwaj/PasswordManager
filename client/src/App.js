@@ -135,6 +135,19 @@ function App() {
                 <span className="password-action">
                   {decryptedId === val.id ? "🙈 Hide" : "👁 View"}
                 </span>
+
+                {decryptedId === val.id && (
+                  <button
+                    className="copy-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigator.clipboard.writeText(val.decrypted);
+                      alert("Password copied to clipboard!");
+                    }}
+                  >
+                    📋 Copy
+                  </button>
+                )}
               </div>
             </div>
           ))}

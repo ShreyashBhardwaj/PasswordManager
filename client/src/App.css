@@ -1,8 +1,6 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Roboto, sans-serif;
-  background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
-  color: #333;
 }
 
 /* Center everything nicely */
@@ -12,6 +10,12 @@ body {
   align-items: center;
   padding: 3rem 1rem;
   gap: 2rem;
+  background: linear-gradient(135deg, #98bed9, #f8f9fa);
+  color: #333;
+
+  /* subtle dotted background */
+  background-image: radial-gradient(#020d473d 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* Add Password Box */
@@ -85,19 +89,36 @@ body {
 }
 
 /* Password card */
+/* Base card */
 .password-card {
   background: #007bff;
   color: white;
   padding: 1rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.25s ease, transform 0.1s ease;
+  transition: background 0.25s ease, transform 0.1s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  /* Smooth expand/collapse */
+  overflow: hidden;
+  max-height: 120px; /* collapsed default */
+  transition: max-height 0.4s ease-in-out, background 0.25s ease,
+    transform 0.1s ease;
+}
+
+/* Expanded state */
+.password-expanded {
+  max-height: 500px; /* enough room for long passwords */
+}
+
+/* Collapsed state */
+.password-collapsed {
+  max-height: 120px;
 }
 
 .password-card:hover {
   background: #0056b3;
-  transform: translateY(-3px) scale(1.5);
+  transform: translateY(-3px);
 }
 
 .password-card-content {
@@ -260,4 +281,27 @@ body {
   max-height: 3.2em; /* ~2 lines */
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Copy button */
+.copy-btn {
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
+  transition: background 0.25s ease, transform 0.1s ease;
+}
+
+.copy-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+.copy-btn:active {
+  transform: translateY(0);
 }
