@@ -115,7 +115,11 @@ function App() {
         <div className="PasswordGrid">
           {passwordList.map((val) => (
             <div
-              className="password-card"
+              className={`password-card ${
+                decryptedId === val.id
+                  ? "password-expanded"
+                  : "password-collapsed"
+              }`}
               key={val.id}
               onClick={() => {
                 togglePassword({

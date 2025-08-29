@@ -91,13 +91,13 @@ body {
   padding: 1rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.25s ease, transform 0.1s ease;
+  transition: all 0.25s ease, transform 0.1s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .password-card:hover {
   background: #0056b3;
-  transform: translateY(-3px);
+  transform: translateY(-3px) scale(1.5);
 }
 
 .password-card-content {
@@ -107,11 +107,29 @@ body {
   gap: 0.5rem;
 }
 
+/* Password text inside card */
 .password-card h3 {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
   text-align: center;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  transition: max-height 0.3s ease, overflow 0.3s ease;
+}
+
+/* Collapsed passwords (default) */
+.password-collapsed h3 {
+  max-height: 3.2em; /* about 2 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Expanded passwords (full reveal) */
+.password-expanded h3 {
+  max-height: none; /* show full content */
+  overflow: visible;
 }
 
 .password-icon {
